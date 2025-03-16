@@ -1,0 +1,97 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #ccc;
+    }
+
+    body {
+        padding: 10px;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $(".btnDelete").click(function () {
+            const id = $(this).attr('data-id');
+            if (confirm(`Are you sure to delete this tutorial, id = ${id}`)) {
+                $.ajax({
+                    url: `${window.location.origin}/api/tutorials/${id}`,
+                    method: "DELETE",
+                    success: (result) => {
+                        console.log(result);
+                        $(this).closest("tr").remove();
+                    },
+                    error: function (error) {
+                        console.log(">>> ajax error: ", error)
+                    }
+                });
+            } else {
+                // Do nothing!
+            }
+        });
+    });
+</script>
+
+<body>
+    <div>
+        <a href="/tutorials/create">Create new Tutorial</a>
+    </div>
+    <div>
+        <h3>List tutorials</h3>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Published</th>
+                <th>Action</th>
+            </tr>
+            <% tutorials.forEach(function(item) { %>
+                <tr>
+                    <td>
+                        <%= item.id %>
+                    </td>
+                    <td>
+                        <%= item.title %>
+                    </td>
+                    <td>
+                        <%= item.description %>
+                    </td>
+                    <td>
+                        <%= item.published %>
+                    </td>
+                    <td>
+                        <button>Edit</button>
+                        <button class="btnDelete" data-id="<%=item.id%>">Delete</button>
+                    </td>
+                </tr>
+                <% }); %>
+
+
+        </table>
+    </div>
+</body>
+
+</html>
